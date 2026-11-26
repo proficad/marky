@@ -1,0 +1,138 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "open-props/easings";
+@import "@marky/ui/tailwind.css";
+@import "@marky/ui/style.css";
+@import "@marky/ui/theme.css";
+@import "@marky/ui/fonts.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Desktop-only shadcn token extensions; shared light tokens live in theme.css. */
+:root {
+	color-scheme: light;
+	--destructive-foreground: oklch(0.985 0 0);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-ring: var(--ring);
+}
+
+@theme inline {
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+	--ease-spring-expressive: var(--ease-spring-3);
+	--default-transition-timing-function: var(--ease-snappy);
+	--transition-property-position:
+		inset-inline-start, inset-block-start, left, top, width, height, opacity,
+		transform, box-shadow, background-color, border-color, color;
+}
+
+.dark {
+	color-scheme: dark;
+	--background: oklch(0.2 0.0025 211);
+	--foreground: oklch(0.945 0.0015 211);
+	--card: oklch(0.24 0.003 211);
+	--card-foreground: var(--foreground);
+	--popover: oklch(0.24 0.003 211);
+	--popover-foreground: var(--foreground);
+	/* #1008ff lifted so link text and the cursor stay legible on dark */
+	--primary: oklch(0.55 0.26 265);
+	--primary-foreground: oklch(0.985 0 0);
+	--brand-accent: oklch(0.62 0.22 265);
+	--secondary: oklch(0.285 0.003 211);
+	--secondary-foreground: var(--foreground);
+	--muted: oklch(0.275 0.003 211);
+	--muted-foreground: oklch(0.72 0.003 211);
+	--accent: oklch(0.32 0.004 211);
+	--accent-foreground: var(--foreground);
+	--selected: oklch(0.42 0.005 211);
+	--selected-foreground: oklch(0.985 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--destructive-foreground: oklch(0.985 0 0);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 14%);
+	--ring: var(--brand-accent);
+	--sidebar: var(--card);
+	--sidebar-foreground: var(--foreground);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-accent: var(--accent);
+	--sidebar-accent-foreground: var(--foreground);
+	--sidebar-border: var(--border);
+	--sidebar-ring: var(--ring);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	html,
+	body,
+	#root {
+		block-size: 100%;
+		overscroll-behavior: none;
+	}
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-family:
+			ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	}
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+@keyframes welcome-rise {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@layer components {
+	.welcome-rise {
+		opacity: 0;
+		animation: welcome-rise 0.5s var(--ease-out-3) both;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.welcome-rise {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+	}
+}
+
+/* Paint over the title-bar divider on the same pixel, including beneath tabs.
+ * A docked sidebar flows into the title bar with no divider; the compact
+ * overlay keeps one so it reads as sitting on top of the editor. */
+[data-sidebar-overlay] [data-sidebar-root]::before {
+	content: "";
+	position: absolute;
+	inset-block-start: -1px;
+	inset-inline: 0 -1px;
+	height: 1px;
+	z-index: 40;
+	pointer-events: none;
+	background: var(--sidebar);
+}
+@media (width < 40rem) {
+	[data-sidebar-overlay] [data-sidebar-root]::before {
+		border-top: 1px solid var(--border);
+	}
+}
